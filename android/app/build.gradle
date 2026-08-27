@@ -1,0 +1,46 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    namespace "com.nno.habiba"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.nno.habiba"
+        minSdk 21
+        targetSdk 28
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // Keep assets uncompressed so the WebView / <audio> tag can seek the
+    // song reliably offline, and so aapt doesn't attempt to strip the m4a.
+    aaptOptions {
+        noCompress "m4a"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("NNO_KEYSTORE") ?: "nno-release.keystore")
+            storePassword System.getenv("NNO_KEYSTORE_PASSWORD") ?: "nnohabiba123"
+            keyAlias System.getenv("NNO_KEY_ALIAS") ?: "nno"
+            keyPassword System.getenv("NNO_KEY_PASSWORD") ?: "nnohabiba123"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
